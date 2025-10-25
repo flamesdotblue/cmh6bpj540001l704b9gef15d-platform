@@ -1,13 +1,13 @@
 import React from 'react';
-import { Home, Languages } from 'lucide-react';
+import { Languages } from 'lucide-react';
+import Logo from './Logo';
 
 export default function Navbar({ lang, onToggleLang }) {
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-gray-200 bg-[#0D47A1] text-white">
+    <header className="sticky top-0 z-40 w-full border-b border-gray-200 bg-[#0D47A1] text-white/95 backdrop-blur">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between" role="navigation" aria-label="Primary">
         <div className="flex items-center gap-2">
-          <Home className="w-5 h-5" aria-hidden="true" />
-          <span className="font-semibold tracking-wide">ShramSathi</span>
+          <Logo size={28} withText />
         </div>
         <nav className="hidden md:flex items-center gap-6 text-sm opacity-95">
           <a href="#find" className="hover:underline focus:outline-none focus:ring-2 focus:ring-white/60 rounded">{lang==='en' ? 'Find Worker' : 'कारीगर खोजें'}</a>

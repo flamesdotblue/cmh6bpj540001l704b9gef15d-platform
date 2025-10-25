@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { BadgeCheck, Filter, MapPin, MessageSquare, Phone, Search, Star } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const CATEGORIES = [
   { key: 'plumber', en: 'Plumber', hi: 'प्लम्बर' },
@@ -44,7 +45,6 @@ export default function WorkerFinder({ t, lang }) {
   const handleSearch = (e) => {
     e.preventDefault();
     setLoading(true);
-    // simulate network delay and skeletons for low bandwidth
     setTimeout(() => setLoading(false), 600);
   };
 
@@ -104,7 +104,7 @@ export default function WorkerFinder({ t, lang }) {
           <h3 className="text-sm font-medium text-gray-600 mb-2">{lang==='en' ? 'Popular Categories' : 'लोकप्रिय श्रेणियाँ'}</h3>
           <div className="flex flex-wrap gap-2">
             {CATEGORIES.slice(0,10).map(cat => (
-              <button key={cat.key} onClick={()=>setSkill(cat.en)} className={`px-3 py-1.5 rounded-full border text-sm ${skill===cat.en ? 'bg-[#0D47A1] text-white border-[#0D47A1]' : 'bg-white hover:bg-gray-50 border-gray-300'}`}>{lang==='en' ? cat.en : cat.hi}</button>
+              <motion.button key={cat.key} onClick={()=>setSkill(cat.en)} whileTap={{ scale: 0.95 }} className={`px-3 py-1.5 rounded-full border text-sm ${skill===cat.en ? 'bg-[#0D47A1] text-white border-[#0D47A1]' : 'bg-white hover:bg-gray-50 border-gray-300'}`}>{lang==='en' ? cat.en : cat.hi}</motion.button>
             ))}
           </div>
         </div>
@@ -113,11 +113,17 @@ export default function WorkerFinder({ t, lang }) {
           {loading ? (
             Array.from({ length: 4 }).map((_, idx) => <SkeletonCard key={idx} />)
           ) : (
-            filtered.length === 0 ? (
-              <div className="col-span-full rounded-2xl border border-dashed border-gray-300 bg-white p-6 text-center text-gray-600">{t.empty}</div>
-            ) : (
-              filtered.map(w => <WorkerCard key={w.id} worker={w} lang={lang} t={t} />)
-            )
+            <AnimatePresence mode="popLayout">
+              {filtered.length === 0 ? (
+                <motion.div layout className="col-span-full rounded-2xl border border-dashed border-gray-300 bg-white p-6 text-center text-gray-600" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>{t.empty}</motion.div>
+              ) : (
+                filtered.map((w, i) => (
+                  <motion.div key={w.id} layout initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }}>
+                    <WorkerCard worker={w} lang={lang} t={t} />
+                  </motion.div>
+                ))
+              )}
+            </AnimatePresence>
           )}
         </div>
       </div>
